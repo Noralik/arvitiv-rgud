@@ -1,0 +1,52 @@
+en
+conf t
+username aurora privilege 15 secret 1234
+enable secret 1234
+line vty 0 15
+login local
+exit
+
+
+vlan 10
+name Vlan-10
+vlan 11
+name Vlan-11
+vlan 12
+name Vlan-12
+vlan 13
+name Vlan-14
+exit
+
+interface range gigabitEthernet 1/0/1-2
+channel-group 1 mode active 
+exit
+interface port-channel 1
+switchport mode trunk 
+switchport trunk allowed vlan 10-13
+exit
+interface range gigabitEthernet 1/0/3-4
+channel-group 2 mode active 
+exit
+interface port-channel 2
+switchport mode trunk 
+switchport trunk allowed vlan 10-13
+exit
+interface range gigabitEthernet 1/0/5-6
+channel-group 3 mode active 
+exit
+interface port-channel 3
+switchport mode trunk 
+switchport trunk allowed vlan 10-13
+exit
+
+
+
+
+
+interface range gigabitEthernet 1/0/7-8
+channel-group 4 mode active 
+exit
+interface port-channel 4
+switchport mode trunk 
+switchport trunk allowed vlan 10-13
+exit
