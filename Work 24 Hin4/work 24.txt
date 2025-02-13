@@ -1,0 +1,94 @@
+en
+conf t
+vlan 10
+name Vlan-10
+vlan 11
+name Vlan-11
+vlan 12
+name Vlan-12
+vlan 13
+name Vlan-13
+vlan 14
+name Vlan-14
+vlan 15
+name Vlan-15
+vlan 16
+name Vlan-16
+vlan 17
+name Vlan-17
+vlan 18
+name Vlan-18
+vlan 19
+name Vlan-19
+vlan 20
+name Vlan-20
+exit
+
+en
+conf t
+username aurora privilege 15 secret 1234
+enable secret 1234
+line vty  0 15
+login local 
+exit
+
+
+
+
+ip dhcp pool 12
+network 192.168.12.0 255.255.255.248
+default-router 192.168.12.1
+exit
+ip dhcp pool 22
+network 10.120.10.28 255.255.255.252
+default-router 10.120.10.29
+exit
+
+
+no interface GigabitEthernet0/1.19
+no interface GigabitEthernet0/1.20
+
+interface GigabitEthernet0/1.12
+ encapsulation dot1Q 12
+ ip address 192.168.12.1 255.255.255.248
+exit
+interface GigabitEthernet0/1.13
+ encapsulation dot1Q 13
+ ip address 192.168.13.1 255.255.255.248
+exit
+
+
+
+router eigrp 65004
+network 192.168.12.1 0.0.0.7
+network 192.168.13.1 0.0.0.7
+
+
+
+
+
+
+
+
+
+ip access-list extended Management
+ permit ip 192.168.10.0 0.0.0.7 10.120.10.0 0.0.0.127
+ permit ip 192.168.12.0 0.0.0.7 10.120.10.0 0.0.0.127
+ permit ip 192.168.14.0 0.0.0.7 10.120.10.0 0.0.0.127
+ permit ip 192.168.16.0 0.0.0.7 10.120.10.0 0.0.0.127
+ permit ip 192.168.18.0 0.0.0.7 10.120.10.0 0.0.0.127
+ permit ip 10.120.10.0 0.0.0.127 any
+ deny ip any any
+
+
+
+(R4) interface GigabitEthernet0/2
+ ip address 10.120.10.17 255.255.255.248
+ ip nat inside
+ ip summary-address eigrp 65004 0.0.0.0 0.0.0.0 5
+ duplex auto
+ speed auto
+commanad default gatewa pravilon rasprostaranit po eigrp
+
+
+hinne 5 establish "https://community.cisco.com/t5/routing/enable-icmp-ping-for-an-intefrace/td-p/3303700"
