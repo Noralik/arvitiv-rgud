@@ -1,0 +1,127 @@
+!
+version 15.1
+no service timestamps log datetime msec
+no service timestamps debug datetime msec
+no service password-encryption
+!
+hostname Router
+!
+!
+!
+!
+!
+clock timezone EET -2
+!
+!
+!
+!
+ip cef
+no ipv6 cef
+!
+!
+!
+!
+license udi pid CISCO2911/K9 sn FTX1524O8Z9-
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+spanning-tree mode pvst
+!
+!
+!
+!
+!
+!
+interface GigabitEthernet0/0
+ no ip address
+ duplex auto
+ speed auto
+!
+interface GigabitEthernet0/0.12
+ encapsulation dot1Q 12
+ ip address 192.168.12.1 255.255.255.248
+ ip helper-address 172.18.10.2
+!
+interface GigabitEthernet0/0.13
+ encapsulation dot1Q 13
+ ip address 192.168.13.2 255.255.255.248
+!
+interface GigabitEthernet0/0.14
+ encapsulation dot1Q 14
+ ip address 10.10.10.1 255.255.255.0
+ ip helper-address 172.18.10.2
+ ip access-group Special_Admin out
+!
+interface GigabitEthernet0/1
+ no ip address
+ duplex auto
+ speed auto
+ shutdown
+!
+interface GigabitEthernet0/2
+ no ip address
+ duplex auto
+ speed auto
+ shutdown
+!
+interface Vlan1
+ no ip address
+ shutdown
+!
+ip classless
+ip route 192.168.11.0 255.255.255.248 192.168.13.3 
+ip route 172.18.11.0 255.255.255.240 192.168.13.3 
+ip route 172.18.10.0 255.255.255.240 192.168.13.1 
+ip route 192.168.10.0 255.255.255.248 192.168.13.1 
+!
+ip flow-export version 9
+!
+!
+ip access-list extended Special_Admin
+ permit ip host 192.168.10.2 10.10.10.0 0.0.0.255 ! For admin
+! prosto razdelenie
+ permit udp ip host 172.18.10.3 eq 53 any
+ permit tcp ip host 172.18.10.3 eq 22 any
+ permit udp ip host 172.18.10.3 eq 123 any
+ permit tcp ip host 172.18.10.3 eq 443 any
+ permit tcp ip host 172.18.10.3 eq 80 any
+ permit tcp ip host 172.18.10.2 eq 443 any
+ permit tcp ip host 172.18.10.2 eq 80 any
+ permit udp ip host 172.18.10.2 eq 53 any
+ permit udp ip host 172.18.10.2 eq 68 any
+ permit udp ip host 172.18.10.2 eq 67 any
+ deny ip 192.168.10.0 0.0.0.255 10.10.10.0 0.0.0.255
+ deny ip 192.168.11.0 0.0.0.255 10.10.10.0 0.0.0.255
+ deny ip 192.168.12.0 0.0.0.255 10.10.10.0 0.0.0.255
+ deny ip 172.18.11.0 0.0.0.255 10.10.10.0 0.0.0.255
+ deny ip 172.18.10.0 0.0.0.255 10.10.10.0 0.0.0.255
+!s
+no cdp run
+!
+!
+!
+!
+!
+line con 0
+!
+line aux 0
+!
+line vty 0 4
+ login
+!
+!
+ntp authentication-key 1 md5 08701E1D5D 7
+ntp authenticate
+ntp trusted-key 1
+ntp server 172.18.10.3 key 1
+!
+end
+
